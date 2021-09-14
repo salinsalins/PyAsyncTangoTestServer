@@ -41,7 +41,7 @@ async def loop_tasks(delay=0.0, verbose=False, threshold=0, delta=True, exc=Fals
         tasks = asyncio.all_tasks()
         # if no_self:
         #     try:
-        #         tasks.discard(AsyncioDevice.loop_task)
+        #         tasks.discard(TestAsyncioDeviceServer.loop_task)
         #     except:
         #         pass
         n0 = len(tasks)
@@ -85,13 +85,13 @@ async def loop_tasks(delay=0.0, verbose=False, threshold=0, delta=True, exc=Fals
 
 async def main():
     task1 = asyncio.create_task(write(an, 1.0))
-    #task2 = asyncio.create_task(write(an, 1.0))
+    #task2 = asyncio.create_task(write(a_name, 1.0))
     while True:
         await task1
         task1 = asyncio.create_task(write(an, 1.0))
         await asyncio.sleep(0)
         #await task2
-        #task2 = asyncio.create_task(write(an, 1.0))
+        #task2 = asyncio.create_task(write(a_name, 1.0))
         #await asyncio.sleep(0)
 
 

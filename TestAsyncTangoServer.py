@@ -4,24 +4,18 @@ import logging
 import asyncio
 import time
 from asyncio import InvalidStateError
-from asyncio import CancelledError
 
 from tango import DevState, GreenMode
 from tango.server import Device, command, attribute
 
 
-class AsyncioDevice(Device):
+class TestAsyncioDeviceServer(Device):
     green_mode = GreenMode.Asyncio
-    loop_task = None
 
     async def init_device(self):
         await super().init_device()
-        self.value = 0.0
-        self.set_state(DevState.RUNNING)
-        if AsyncioDevice.loop_task is None:
-            # AsyncioDevice.loop_task = asyncio.create_task(loop_tasks(0.0, False, 10, True, False))
-            asyncio.get_event_loop().set_debug(True)
-            logging.getLogger("asyncio").setLevel(logging.DEBUG)
+        self.value = time.time()
+        self.set_state(DevState.ON)
 
     @command
     async def long_running_command(self):
@@ -41,23 +35,24 @@ class AsyncioDevice(Device):
 
     @attribute
     async def test_attribute(self):
-        logger.info('Read entry %s', self)
-        await asyncio.sleep(0.25)
-        logger.info('Read exit %s', self)
+        t0 = time.time()
+        # logger.info('Read entry %s', self)
+        await asyncio.sleep(0.1)
+        dt = (time.time() - t0) * 1000.0
+        # logger.info('Read exit %s %s ms', self, dt)
         return self.value
 
     @test_attribute.write
     async def write_test_attribute(self, value):
         t0 = time.time()
-        logger.info('Write entry %s', self)
+        # logger.info('Write entry %s', self)
         self.value = value
-        # time.sleep(0.5)
-        await asyncio.sleep(0.5)
+        # await asyncio.sleep(0.5)
         dt = (time.time() - t0) * 1000.0
-        logger.info('Write exit %s', self)
+        # logger.info('Write exit %s %s ms', self, dt)
         if dt > 2500.0:
             logger.info('Long write!!!!!!!!!!!!!!!!!!! %s', self)
-        return('Write of %s finished in %d ms' % (value, dt))
+        return ('Write of %s finished in %d ms' % (value, dt))
 
 
 async def loop_tasks(delay=0.0, verbose=False, threshold=-1, delta=True, exc=False, stack=True, no_self=True):
@@ -69,7 +64,7 @@ async def loop_tasks(delay=0.0, verbose=False, threshold=-1, delta=True, exc=Fal
         tasks = asyncio.all_tasks()
         if no_self:
             try:
-                tasks.discard(AsyncioDevice.loop_task)
+                tasks.discard(TestAsyncioDeviceServer.loop_task)
             except:
                 pass
         n0 = len(tasks)
@@ -122,9 +117,6 @@ if __name__ == '__main__':
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
     logger.addHandler(console_handler)
-    logging.getLogger("tango").addHandler(console_handler)
-    logging.getLogger("tango").setLevel(logging.DEBUG)
 
     # run server
-    AsyncioDevice.run_server()
-
+    TestAsyncioDeviceServer.run_server()
