@@ -42,7 +42,7 @@ if __name__ == '__main__':
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
     logger.addHandler(console_handler)
-
+    logger.debug('Start')
     # run server
     TestSyncDeviceServer.run_server(event_loop=looping)
     # TestSyncDeviceServer.run_server()
