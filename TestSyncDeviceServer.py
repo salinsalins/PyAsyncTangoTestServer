@@ -18,6 +18,7 @@ class TestSyncDeviceServer(Device):
 
     @attribute
     def test_attribute(self):
+        logger.debug('entry')
         return self.value
 
     @test_attribute.write
@@ -25,6 +26,10 @@ class TestSyncDeviceServer(Device):
         self.value = value
         return True
 
+def looping():
+    logger.debug('loop')
+    time.sleep(0.001)
+    pass
 
 if __name__ == '__main__':
     # configure logger
@@ -39,4 +44,5 @@ if __name__ == '__main__':
     logger.addHandler(console_handler)
 
     # run server
-    TestSyncDeviceServer.run_server()
+    TestSyncDeviceServer.run_server(event_loop=looping)
+    # TestSyncDeviceServer.run_server()
