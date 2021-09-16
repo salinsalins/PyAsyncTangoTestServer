@@ -9,12 +9,24 @@ from tango import DevState, GreenMode
 from tango.server import Device, command, attribute
 
 
+def entryexit(f):
+    def wrapper():
+        logger.debug('entry %s', f)
+        t0 = time.time()
+        f()
+        dt = (time.time() - t0) * 1000.0
+        logger.debug('exit %s %6.3f ms', f, dt)
+
+    return wrapper
+
+
 class TestAsyncioDeviceServer(Device):
     green_mode = GreenMode.Asyncio
 
     async def init_device(self):
         await super().init_device()
         self.value = time.time()
+        self._lock = asyncio.Lock()
         self.set_state(DevState.ON)
 
     @command
@@ -33,26 +45,35 @@ class TestAsyncioDeviceServer(Device):
         await asyncio.sleep(3)
         self.set_state(DevState.EXTRACT)
 
-    @attribute
+    @attribute(green_mode=GreenMode.Asyncio, read_green_mode=GreenMode.Asyncio, write_green_mode=GreenMode.Asyncio)
     async def test_attribute(self):
-        t0 = time.time()
-        # logger.info('Read entry %s', self)
-        await asyncio.sleep(0.1)
-        dt = (time.time() - t0) * 1000.0
-        # logger.info('Read exit %s %s ms', self, dt)
+        #logger.debug('entry')
+        #await asyncio.sleep(0.1)
+        #logger.debug('exit')
         return self.value
 
     @test_attribute.write
     async def write_test_attribute(self, value):
-        t0 = time.time()
-        # logger.info('Write entry %s', self)
+        #logger.debug('entry')
         self.value = value
-        # await asyncio.sleep(0.5)
-        dt = (time.time() - t0) * 1000.0
-        # logger.info('Write exit %s %s ms', self, dt)
-        if dt > 2500.0:
-            logger.info('Long write!!!!!!!!!!!!!!!!!!! %s', self)
-        return ('Write of %s finished in %d ms' % (value, dt))
+        # await asyncio.sleep(0.2)
+        #logger.debug('exit')
+        return True
+
+    @attribute
+    async def test_attribute_2(self):
+        logger.debug('entry')
+        await asyncio.sleep(0)
+        logger.debug('exit')
+        return self.value
+
+    @test_attribute_2.write
+    async def write_test_attribute_2(self, value):
+        logger.debug('entry')
+        self.value = value
+        await asyncio.sleep(0)
+        logger.debug('exit')
+        return True
 
 
 async def loop_tasks(delay=0.0, verbose=False, threshold=-1, delta=True, exc=False, stack=True, no_self=True):
