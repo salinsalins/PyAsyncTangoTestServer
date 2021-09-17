@@ -140,5 +140,6 @@ if __name__ == '__main__':
     console_handler.setFormatter(log_formatter)
     logger.addHandler(console_handler)
 
+    logger.debug('Start')
     # run server
     TestAsyncioDeviceServer.run_server()

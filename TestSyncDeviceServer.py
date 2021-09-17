@@ -1,12 +1,10 @@
-"""Demo Tango Device Server using asyncio green mode"""
+"""Demo Tango Device Server"""
 
 import logging
-import asyncio
 import time
-from asyncio import InvalidStateError
 
-from tango import DevState, GreenMode
-from tango.server import Device, command, attribute
+from tango import DevState
+from tango.server import Device, attribute
 
 
 class TestSyncDeviceServer(Device):
@@ -42,7 +40,8 @@ if __name__ == '__main__':
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
     logger.addHandler(console_handler)
+
     logger.debug('Start')
     # run server
-    TestSyncDeviceServer.run_server(event_loop=looping)
-    # TestSyncDeviceServer.run_server()
+    # TestSyncDeviceServer.run_server(event_loop=looping)
+    TestSyncDeviceServer.run_server()
