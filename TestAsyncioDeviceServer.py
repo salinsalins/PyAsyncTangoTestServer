@@ -9,16 +9,16 @@ from tango import DevState, GreenMode
 from tango.server import Device, command, attribute
 
 
-def entryexit(f):
-    def wrapper():
-        logger.debug('entry %s', f)
-        t0 = time.time()
-        f()
-        dt = (time.time() - t0) * 1000.0
-        logger.debug('exit %s %6.3f ms', f, dt)
-
-    return wrapper
-
+# def entryexit(f):
+#     def wrapper():
+#         logger.debug('entry %s', f)
+#         t0 = time.time()
+#         f()
+#         dt = (time.time() - t0) * 1000.0
+#         logger.debug('exit %s %6.3f ms', f, dt)
+#
+#     return wrapper
+#
 
 class TestAsyncioDeviceServer(Device):
     green_mode = GreenMode.Asyncio
@@ -125,7 +125,6 @@ async def loop_tasks(delay=0.0, verbose=False, threshold=-1, delta=True, exc=Fal
                     logger.debug("   %s %s", id(task), task)
             logger.debug("********************\n")
         await asyncio.sleep(delay)
-
 
 
 if __name__ == '__main__':
