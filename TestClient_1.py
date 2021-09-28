@@ -56,7 +56,7 @@ ax.plot(x, y)
 ax.set(xlabel='N', ylabel='time (ms)',
        title='About as simple as it gets, folks')
 ax.grid()
-fig.savefig("test.png")
+# fig.savefig("test.png")
 plt.show()
 
 # the histogram of the data
