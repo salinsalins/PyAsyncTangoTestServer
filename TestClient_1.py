@@ -7,13 +7,13 @@ import numpy as np
 
 d_name = 'binp/nbi/asyncio01'
 d_name = 'binp/test/sync01'
-d_name = 'sys/tg_test/1'
+#d_name = 'sys/tg_test/1'
 d_proxy = tango.DeviceProxy(d_name)
 ping1 = d_proxy.ping()
 print(d_name, 'ping', ping1, 's')
 a_name = 'test_attribute'
-a_name = 'state'
-a_name = 'double_scalar'
+#a_name = 'state'
+#a_name = 'double_scalar'
 print(' ')
 
 N = 200000
@@ -67,9 +67,9 @@ n, bins, patches = ax.hist(y, num_bins, density=True)
 # z = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
 #      np.exp(-0.5 * (1 / sigma * (bins - mu))**2))
 # ax.plot(bins, y, '--')
-ax.set_xlabel('Smarts')
+ax.set_xlabel('time (ms)')
 ax.set_ylabel('Probability density')
-ax.set_title(r'Histogram of IQ: $\mu=100$, $\sigma=15$')
+ax.set_title(r'Histogram of Read timing: $\mu=100$, $\sigma=15$')
 # Tweak spacing to prevent clipping of ylabel
 fig.tight_layout()
 plt.show()
