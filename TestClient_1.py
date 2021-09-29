@@ -54,7 +54,7 @@ x = np.arange(N)
 fig, ax = plt.subplots()
 ax.plot(x, y)
 ax.set(xlabel='N', ylabel='time (ms)',
-       title='About as simple as it gets, folks')
+       title='Read timing')
 ax.grid()
 # fig.savefig("test.png")
 plt.show()
@@ -63,13 +63,10 @@ plt.show()
 num_bins = 500
 fig, ax = plt.subplots()
 n, bins, patches = ax.hist(y, num_bins, density=True)
-# # add a 'best fit' line
-# z = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
-#      np.exp(-0.5 * (1 / sigma * (bins - mu))**2))
-# ax.plot(bins, y, '--')
 ax.set_xlabel('time (ms)')
 ax.set_ylabel('Probability density')
-ax.set_title(r'Histogram of Read timing: $\mu=100$, $\sigma=15$')
+ax.set_title(r'Histogram of Read timing')
+#ax.set_title(r'Histogram of Read timing: $\mu=100$, $\sigma=15$')
 # Tweak spacing to prevent clipping of ylabel
 fig.tight_layout()
 plt.show()
